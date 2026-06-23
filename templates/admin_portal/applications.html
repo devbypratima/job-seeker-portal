@@ -1,0 +1,57 @@
+{% extends 'admin_portal/dashboard.html' %}
+{% block title %}All Applications — Admin{% endblock %}
+{% block content %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <a href="{% url 'admin_dashboard' %}" class="sidebar-link"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a href="{% url 'admin_candidates' %}" class="sidebar-link"><i class="fas fa-users"></i> Candidates</a>
+        <a href="{% url 'admin_companies' %}" class="sidebar-link"><i class="fas fa-building"></i> Companies</a>
+        <a href="{% url 'admin_jobs' %}" class="sidebar-link"><i class="fas fa-briefcase"></i> Jobs</a>
+        <a href="{% url 'admin_applications' %}" class="sidebar-link active"><i class="fas fa-file-alt"></i>
+            Applications</a>
+        <a href="{% url 'admin_interviews' %}" class="sidebar-link"><i class="fas fa-video"></i> Interviews</a>
+        <a href="{% url 'admin_messages' %}" class="sidebar-link"><i class="fas fa-envelope"></i> Messages</a>
+        <div class="sidebar-brand" style="margin-top:2rem">System</div>
+        <a href="{% url 'logout' %}" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </aside>
+    <main class="admin-main">
+        <h1 style="font-size:1.8rem;margin-bottom:1.5rem">All Applications</h1>
+        <div class="card">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Candidate</th>
+                            <th>Job</th>
+                            <th>Company</th>
+                            <th>Applied on</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            <td>#{{ app.id }}</td>
+                            <td><strong>{{ app.candidate.user.get_full_name|default:app.candidate.user.username
+                                    }}</strong></td>
+                            <td><a href="{% url 'job_detail' app.job.id %}" target="_blank"
+                                    style="color:var(--primary-light)">{{ app.job.title|truncatechars:30 }}</a></td>
+                            <td>{{ app.job.company.company_name }}</td>
+                            <td><span style="color:var(--text-muted);font-size:.85rem">{{ app.applied_at|date:"d M Y"
+                                    }}</span></td>
+                            <td><span class="badge badge-{{ app.status }}">{{ app.get_status_display }}</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align:center;color:var(--text-muted)">No applications found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

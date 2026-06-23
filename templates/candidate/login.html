@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Candidate Login — Job Seeker Portal{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="form-card">
+            <div class="form-card-header">
+                <div style="font-size:2rem;margin-bottom:.5rem">👨‍💼</div>
+                <h2><i class="fas fa-sign-in-alt"></i> Candidate Login</h2>
+                <p>Sign in to your job seeker account</p>
+            </div>
+            <div class="form-card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div style="color:var(--danger);font-size:.82rem;margin-top:.3rem">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">
+                        <i class="fas fa-sign-in-alt"></i> Login as Candidate
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="{% url 'candidate_register' %}">Register as Candidate</a></p>
+            <p style="margin-top:.4rem"><a href="{% url 'login_choice' %}"><i class="fas fa-arrow-left"></i> Back to login options</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Search Jobs — Job Seeker{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div>
+            <h1><i class="fas fa-search" style="color:var(--primary)"></i> Browse Jobs</h1>
+            <p>Find your next opportunity from {{ jobs|length }} available positions</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" style="padding-top:2rem">
+    <div class="container">
+        <!-- Search Filter Card -->
+        <div class="card" style="margin-bottom:2rem">
+            <div class="card-body">
+                <form method="get" novalidate>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;align-items:end">
+                        <div class="form-group" style="margin:0">
+                            <label class="form-label"><i class="fas fa-briefcase"></i> Job Title</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="form-group" style="margin:0">
+                            <label class="form-label"><i class="fas fa-map-marker-alt"></i> Location</label>
+                            {{ form.location }}
+                        </div>
+                        <div class="form-group" style="margin:0">
+                            <label class="form-label"><i class="fas fa-tags"></i> Skills</label>
+                            {{ form.skills }}
+                        </div>
+                        <div class="form-group" style="margin:0">
+                            <label class="form-label"><i class="fas fa-filter"></i> Job Type</label>
+                            {{ form.job_type }}
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+                        <a href="{% url 'job_search' %}" class="btn btn-outline"><i class="fas fa-times"></i> Clear</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results -->
+        {% if jobs %}
+        <div class="grid-2">
+            {% for job in jobs %}
+            <div class="job-card">
+                <div class="job-card-header">
+                    <div class="company-logo-sm">{{ job.company.company_name|first|upper }}</div>
+                    <div style="flex:1">
+                        <div class="job-title">{{ job.title }}</div>
+                        <div class="job-company"><i class="fas fa-building"></i> {{ job.company.company_name }}</div>
+                    </div>
+                    {% if job.company.is_verified %}
+                    <span class="badge badge-verified"><i class="fas fa-check-circle"></i></span>
+                    {% endif %}
+                </div>
+                <div class="job-meta">
+                    <span class="job-tag location"><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+                    <span class="job-tag type"><i class="fas fa-clock"></i> {{ job.get_job_type_display }}</span>
+                    <span class="job-tag">
+                        <i class="fas fa-user-graduate"></i>
+                        {{ job.get_experience_required_display }}
+                    </span>
+                    {% if job.salary_min %}
+                    <span class="job-tag salary">
+                        <i class="fas fa-rupee-sign"></i>
+                        {{ job.salary_min|floatformat:0 }}–{{ job.salary_max|floatformat:0 }}
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="skills-wrap" style="margin-bottom:1rem">
+                    {% for skill in job.get_skills_list %}
+                    <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+                <p style="color:var(--text-muted);font-size:.88rem;margin-bottom:1rem">
+                    {{ job.description|truncatewords:20 }}
+                </p>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                        <small style="color:var(--text-dim)">
+                            <i class="fas fa-calendar"></i>
+                            {{ job.created_at|date:"d M Y" }}
+                        </small><br>
+                        <small style="color:var(--text-dim)">
+                            <i class="fas fa-users"></i>
+                            {{ job.vacancies }} {{ job.vacancies|pluralize:"vacancy,vacancies" }}
+                        </small>
+                    </div>
+                    <a href="{% url 'job_detail' job.id %}" class="btn btn-primary btn-sm">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-search"></i>
+            <h3>No jobs found</h3>
+            <p>Try adjusting your search filters</p>
+            <a href="{% url 'job_search' %}" class="btn btn-outline" style="margin-top:1rem">Clear Filters</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

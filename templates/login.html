@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Login — JobPortal{% endblock %}
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="form-card">
+            <div class="form-card-header">
+                <h2><i class="fas fa-sign-in-alt"></i> Welcome Back</h2>
+                <p>Sign in to your JobPortal account</p>
+            </div>
+            <div class="form-card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div style="color:var(--danger);font-size:.82rem;margin-top:.3rem">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="auth-footer">
+            <p>New here? <a href="{% url 'candidate_register' %}">Register as Candidate</a> or
+                <a href="{% url 'company_register' %}">Register as Company</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

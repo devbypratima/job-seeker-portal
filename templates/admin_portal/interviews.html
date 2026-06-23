@@ -1,0 +1,72 @@
+{% extends 'admin_portal/dashboard.html' %}
+{% block title %}All Interviews — Admin{% endblock %}
+{% block content %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <a href="{% url 'admin_dashboard' %}" class="sidebar-link"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a href="{% url 'admin_candidates' %}" class="sidebar-link"><i class="fas fa-users"></i> Candidates</a>
+        <a href="{% url 'admin_companies' %}" class="sidebar-link"><i class="fas fa-building"></i> Companies</a>
+        <a href="{% url 'admin_jobs' %}" class="sidebar-link"><i class="fas fa-briefcase"></i> Jobs</a>
+        <a href="{% url 'admin_applications' %}" class="sidebar-link"><i class="fas fa-file-alt"></i> Applications</a>
+        <a href="{% url 'admin_interviews' %}" class="sidebar-link active"><i class="fas fa-video"></i> Interviews</a>
+        <a href="{% url 'admin_messages' %}" class="sidebar-link"><i class="fas fa-envelope"></i> Messages</a>
+        <div class="sidebar-brand" style="margin-top:2rem">System</div>
+        <a href="{% url 'logout' %}" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </aside>
+    <main class="admin-main">
+        <h1 style="font-size:1.8rem;margin-bottom:1.5rem">Scheduled Interviews</h1>
+        <div class="card">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Scheduled For</th>
+                            <th>Candidate</th>
+                            <th>Job / Company</th>
+                            <th>Mode</th>
+                            <th>Link / Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for interview in interviews %}
+                        <tr>
+                            <td>
+                                <div style="font-weight:600;color:var(--primary-light)"><i
+                                        class="fas fa-calendar-alt"></i> {{ interview.scheduled_date|date:"d M Y" }}
+                                </div>
+                                <div style="color:var(--text-muted);font-size:.85rem"><i class="fas fa-clock"></i> {{
+                                    interview.scheduled_date|time:"H:i" }}</div>
+                            </td>
+                            <td><strong>{{
+                                    interview.application.candidate.user.get_full_name|default:interview.application.candidate.user.username
+                                    }}</strong></td>
+                            <td>
+                                <div>{{ interview.application.job.title }}</div>
+                                <div style="font-size:.85rem;color:var(--text-muted)"><i class="fas fa-building"></i> {{
+                                    interview.application.job.company.company_name }}</div>
+                            </td>
+                            <td>
+                                {% if interview.mode == 'online' %}
+                                <span class="badge badge-verified"><i class="fas fa-video"></i> Online</span>
+                                {% elif interview.mode == 'phone' %}
+                                <span class="badge badge-pending"><i class="fas fa-phone"></i> Phone</span>
+                                {% else %}
+                                <span class="badge badge-active"><i class="fas fa-user-friends"></i> In Person</span>
+                                {% endif %}
+                            </td>
+                            <td style="max-width:200px;word-break:break-all;font-size:.85rem">{{
+                                interview.location_or_link|urlize }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align:center;color:var(--text-muted)">No interviews scheduled.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

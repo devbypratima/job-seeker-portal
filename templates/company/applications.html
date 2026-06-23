@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}Applications: {{ job.title }} — JobPortal{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="breadcrumb" style="margin-bottom:1rem">
+            <a href="{% url 'company_dashboard' %}">Dashboard</a>
+            <i class="fas fa-chevron-right" style="font-size:.7rem"></i>
+            <span>{{ job.title }}</span>
+        </div>
+        <div>
+            <h1><i class="fas fa-file-alt" style="color:var(--primary)"></i> Applications for {{ job.title }}</h1>
+            <p>You have {{ applications.count }} candidate{{ applications.count|pluralize }} applied for this position.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="section" style="padding-top:2rem">
+    <div class="container">
+        <div class="card">
+            {% if applications %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Skills</th>
+                            <th>Applied On</th>
+                            <th>Status</th>
+                            <th>Interview</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:1rem">
+                                    <div class="company-logo-sm"
+                                        style="width:40px;height:40px;font-size:1rem;border-radius:50%">
+                                        {{ app.candidate.user.first_name|first|upper }}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:600">{{
+                                            app.candidate.user.get_full_name|default:app.candidate.user.username }}
+                                        </div>
+                                        <div style="font-size:.8rem;color:var(--text-muted)"><i
+                                                class="fas fa-map-marker-alt"></i> {{
+                                            app.candidate.location|default:"N/A" }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="max-width:200px">
+                                <div class="skills-wrap">
+                                    {% for skill in app.candidate.get_skills_list|slice:":3" %}
+                                    <span class="skill-tag" style="padding:.15rem .5rem;font-size:.75rem">{{ skill
+                                        }}</span>
+                                    {% endfor %}
+                                    {% if app.candidate.get_skills_list|length > 3 %}
+                                    <span style="color:var(--text-muted);font-size:.75rem">+more</span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td style="color:var(--text-muted);font-size:.85rem">{{ app.applied_at|date:"d M Y" }}</td>
+                            <td>
+                                <form method="post" action="{% url 'update_application_status' app.id %}"
+                                    style="display:flex;align-items:center;gap:.5rem">
+                                    {% csrf_token %}
+                                    <select name="status" class="form-select"
+                                        style="padding:.3rem 2rem .3rem .8rem;font-size:.8rem;width:130px"
+                                        onchange="this.form.submit()">
+                                        <option value="pending" {% if app.status == 'pending' %}selected{% endif %}>
+                                            Pending</option>
+                                        <option value="reviewed" {% if app.status == 'reviewed' %}selected{% endif %}>
+                                            Reviewed</option>
+                                        <option value="shortlisted" {% if app.status == 'shortlisted' %}selected{% endif %}>
+                                            Shortlisted</option>
+                                        <option value="hired" {% if app.status == 'hired' %}selected{% endif %}>Hired
+                                        </option>
+                                        <option value="rejected" {% if app.status == 'rejected' %}selected{% endif %}>
+                                            Rejected</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                {% if app.interview %}
+                                <span class="badge badge-verified"><i class="fas fa-calendar-check"></i> {{
+                                    app.interview.scheduled_date|date:"d M, H:i" }}</span>
+                                {% else %}
+                                <a href="{% url 'schedule_interview' app.id %}" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-calendar-plus"></i> Schedule
+                                </a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if app.resume %}
+                                <a href="{{ app.resume.url }}" download class="btn btn-primary btn-sm"
+                                    title="Application Resume"><i class="fas fa-download"></i></a>
+                                {% elif app.candidate.resume %}
+                                <a href="{{ app.candidate.resume.url }}" download class="btn btn-primary btn-sm"
+                                    title="Profile Resume"><i class="fas fa-download"></i></a>
+                                {% endif %}
+                                {% if app.candidate.github %}
+                                <a href="{{ app.candidate.github }}" target="_blank" class="btn btn-secondary btn-sm"><i
+                                        class="fab fa-github"></i></a>
+                                {% endif %}
+                                {% if app.candidate.linkedin %}
+                                <a href="{{ app.candidate.linkedin }}" target="_blank" class="btn btn-outline btn-sm"
+                                    style="color:#0a66c2;border-color:#0a66c2"><i class="fab fa-linkedin"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if app.cover_letter %}
+                        <tr style="background:rgba(255,255,255,0.01)">
+                            <td colspan="6" style="padding:1rem 2rem">
+                                <div style="font-size:.85rem;color:var(--text-muted)"><strong>Cover Letter:</strong> {{
+                                    app.cover_letter }}</div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="card-body">
+                <div class="empty-state"><i class="fas fa-inbox"></i>
+                    <h3>No applications yet</h3>
+                    <p>Candidates will appear here once they apply.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

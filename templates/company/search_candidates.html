@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Search Candidates — JobPortal{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div>
+            <h1><i class="fas fa-users" style="color:var(--primary)"></i> Browse Candidates</h1>
+            <p>Find the right talent for your company</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" style="padding-top:2rem">
+    <div class="container">
+        <!-- Search Filter -->
+        <div class="card" style="margin-bottom:2rem">
+            <div class="card-body">
+                <form method="get" novalidate>
+                    <div style="display:flex;gap:1.5rem;align-items:flex-end;flex-wrap:wrap">
+                        <div class="form-group" style="flex:1;margin:0">
+                            <label class="form-label"><i class="fas fa-tags"></i> Skills</label>
+                            {{ form.skills }}
+                        </div>
+                        <div class="form-group" style="flex:1;margin:0">
+                            <label class="form-label"><i class="fas fa-map-marker-alt"></i> Location</label>
+                            {{ form.location }}
+                        </div>
+                        <div style="display:flex;gap:1rem">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+                            <a href="{% url 'search_candidates' %}" class="btn btn-outline">Clear</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Candidates Grid -->
+        {% if candidates %}
+        <div class="grid-3">
+            {% for candidate in candidates %}
+            <div class="card" style="text-align:center">
+                <div class="card-body">
+                    <div class="company-logo-sm"
+                        style="margin:0 auto 1.5rem;width:80px;height:80px;font-size:2rem;border-radius:50%">
+                        {% if candidate.profile_picture %}
+                        <img src="{{ candidate.profile_picture.url }}"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:50%">
+                        {% else %}
+                        {{ candidate.user.first_name|first|upper }}
+                        {% endif %}
+                    </div>
+                    <h3 style="font-size:1.1rem;margin-bottom:.3rem">{{ candidate.user.get_full_name|default:candidate.user.username }}</h3>
+                    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1rem">
+                        <i class="fas fa-map-marker-alt" style="color:var(--primary-light)"></i> {{ candidate.location|default:"No Location" }}
+                    </p>
+                    <div class="skills-wrap" style="justify-content:center;margin-bottom:1.5rem">
+                        {% for skill in candidate.get_skills_list|slice:":4" %}
+                        <span class="skill-tag" style="background:rgba(99,102,241,.1);border:none">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                    <div style="display:flex;gap:.5rem;justify-content:center">
+                        {% if candidate.resume %}
+                        <a href="{{ candidate.resume.url }}" download class="btn btn-primary btn-sm"><i
+                                class="fas fa-download"></i> Resume</a>
+                        {% endif %}
+                        {% if candidate.linkedin %}
+                        <a href="{{ candidate.linkedin }}" target="_blank" class="btn btn-outline btn-sm"
+                            style="color:#0a66c2;border-color:#0a66c2"><i class="fab fa-linkedin"></i></a>
+                        {% endif %}
+                        {% if candidate.github %}
+                        <a href="{{ candidate.github }}" target="_blank" class="btn btn-outline btn-sm"><i
+                                class="fab fa-github"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state"><i class="fas fa-search"></i>
+            <h3>No candidates found</h3>
+            <p>Try different keywords or locations</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}{{ job.title }} — JobPortal{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{% url 'job_search' %}">Jobs</a>
+            <i class="fas fa-chevron-right" style="font-size:.7rem"></i>
+            <span>{{ job.title }}</span>
+        </div>
+    </div>
+</div>
+<div class="section" style="padding-top:2rem">
+    <div class="container" style="display:grid;grid-template-columns:2fr 1fr;gap:2rem">
+        <!-- Main Content -->
+        <div>
+            <div class="card" style="margin-bottom:1.5rem">
+                <div class="card-body">
+                    <div style="display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap">
+                        <div class="company-logo-sm" style="width:70px;height:70px;font-size:1.8rem">
+                            {{ job.company.company_name|first|upper }}
+                        </div>
+                        <div style="flex:1">
+                            <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:.3rem">{{ job.title }}</h1>
+                            <p style="color:var(--primary-light);font-size:1rem;font-weight:500">
+                                <i class="fas fa-building"></i> {{ job.company.company_name }}
+                                {% if job.company.is_verified %}
+                                <span class="badge badge-verified" style="margin-left:.5rem"><i
+                                        class="fas fa-check-circle"></i> Verified</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="job-meta" style="margin-bottom:1.5rem">
+                        <span class="job-tag location"><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+                        <span class="job-tag type"><i class="fas fa-clock"></i> {{ job.get_job_type_display }}</span>
+                        <span class="job-tag"><i class="fas fa-user-graduate"></i> {{ job.get_experience_required_display }}</span>
+                        {% if job.salary_min %}
+                        <span class="job-tag salary"><i class="fas fa-rupee-sign"></i> {{ job.salary_min|floatformat:0 }} – {{ job.salary_max|floatformat:0 }}</span>
+                        {% endif %}
+                        <span class="job-tag"><i class="fas fa-users"></i> {{ job.vacancies }} {{ job.vacancies|pluralize:"vacancy,vacancies" }}</span>
+                    </div>
+                    <h3 style="margin-bottom:.8rem;font-size:1rem">Required Skills</h3>
+                    <div class="skills-wrap" style="margin-bottom:1.5rem">
+                        {% for skill in job.get_skills_list %}
+                        <span class="skill-tag">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                    {% if job.deadline %}
+                    <p style="color:var(--danger);font-size:.9rem">
+                        <i class="fas fa-calendar-times"></i> Application deadline: <strong>{{ job.deadline|date:"d M Y" }}</strong>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><i class="fas fa-file-alt" style="color:var(--primary)"></i> Job Description
+                </div>
+                <div class="card-body" style="white-space:pre-wrap;color:var(--text-muted);line-height:1.8">{{ job.description }}</div>
+            </div>
+        </div>
+
+        <!-- Apply Sidebar -->
+        <div>
+            <div class="card" style="position:sticky;top:90px">
+                <div class="card-body" style="text-align:center">
+                    {% if user.is_authenticated %}
+                    {% if already_applied %}
+                    <div style="color:var(--success);font-size:1.1rem;font-weight:600;margin-bottom:1rem">
+                        <i class="fas fa-check-circle"></i> Already Applied
+                    </div>
+                    <a href="{% url 'candidate_profile' %}" class="btn btn-outline btn-block">View My Applications</a>
+                    {% else %}
+                    <a href="{% url 'apply_job' job.id %}" class="btn btn-primary btn-block btn-lg"
+                        style="margin-bottom:1rem"><i class="fas fa-paper-plane"></i> Apply Now</a>
+                    {% endif %}
+                    {% else %}
+                    <p style="color:var(--text-muted);margin-bottom:1rem">Login to apply for this job</p>
+                    <a href="{% url 'login_choice' %}?next={% url 'job_detail' job.id %}" class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Login to Apply
+                    </a>
+                    <a href="{% url 'candidate_register' %}" class="btn btn-outline btn-block"
+                        style="margin-top:.5rem">Create Account</a>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <h4 style="font-size:.9rem;margin-bottom:.8rem;color:var(--text-muted)">About the Company</h4>
+                    {% if job.company.website %}
+                    <p style="font-size:.85rem">
+                        <i class="fas fa-globe" style="color:var(--secondary)"></i>
+                        <a href="{{ job.company.website }}" target="_blank" style="color:var(--primary-light)">{{ job.company.website }}</a>
+                    </p>
+                    {% endif %}
+                    {% if job.company.location %}
+                    <p style="font-size:.85rem;margin-top:.4rem">
+                        <i class="fas fa-map-marker-alt" style="color:var(--accent)"></i> {{ job.company.location }}
+                    </p>
+                    {% endif %}
+                    {% if job.company.description %}
+                    <p style="font-size:.82rem;color:var(--text-muted);margin-top:.6rem">{{ job.company.description|truncatewords:25 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

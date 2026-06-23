@@ -1,0 +1,125 @@
+<!-- ADMIN TEMPLATES WRAPPER -->
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard — JobPortal{% endblock %}
+{% block navbar %}
+<nav class="navbar" style="background:var(--dark-2);border-color:rgba(245,158,11,0.2)">
+    <div class="nav-container">
+        <div class="nav-logo"><i class="fas fa-shield-alt" style="color:var(--accent)"></i> Admin<span>Portal</span>
+        </div>
+        <a href="{% url 'home' %}" class="btn btn-outline btn-sm"><i class="fas fa-external-link-alt"></i> Public
+            Site</a>
+    </div>
+</nav>
+{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="admin-layout">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-brand">Navigation</div>
+        <a href="{% url 'admin_dashboard' %}" class="sidebar-link active"><i class="fas fa-chart-line"></i>
+            Dashboard</a>
+        <a href="{% url 'admin_candidates' %}" class="sidebar-link"><i class="fas fa-users"></i> Candidates</a>
+        <a href="{% url 'admin_companies' %}" class="sidebar-link"><i class="fas fa-building"></i> Companies</a>
+        <a href="{% url 'admin_jobs' %}" class="sidebar-link"><i class="fas fa-briefcase"></i> Jobs</a>
+        <a href="{% url 'admin_applications' %}" class="sidebar-link"><i class="fas fa-file-alt"></i> Applications</a>
+        <a href="{% url 'admin_interviews' %}" class="sidebar-link"><i class="fas fa-video"></i> Interviews</a>
+        <a href="{% url 'admin_messages' %}" class="sidebar-link">
+            <i class="fas fa-envelope"></i> Messages
+            {% if unread_messages %}
+            <span class="badge badge-pending" style="margin-left:auto">{{ unread_messages }}</span>
+            {% endif %}
+        </a>
+        <div class="sidebar-brand" style="margin-top:2rem">System</div>
+        <a href="{% url 'logout' %}" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <h1 style="font-size:1.8rem;margin-bottom:1.5rem">System Overview</h1>
+        <div class="admin-stats">
+            <div class="admin-stat">
+                <div class="admin-stat-icon" style="background:rgba(99,102,241,.2);color:var(--primary)"><i
+                        class="fas fa-users"></i></div>
+                <div class="admin-stat-number">{{ total_candidates }}</div>
+                <div class="admin-stat-label">Total Candidates</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-icon" style="background:rgba(245,158,11,.2);color:var(--warning)"><i
+                        class="fas fa-building"></i></div>
+                <div class="admin-stat-number">{{ total_companies }}</div>
+                <div class="admin-stat-label">Total Companies</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-icon" style="background:rgba(16,185,129,.2);color:var(--success)"><i
+                        class="fas fa-briefcase"></i></div>
+                <div class="admin-stat-number">{{ active_jobs }} / {{ total_jobs }}</div>
+                <div class="admin-stat-label">Active / Total Jobs</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-icon" style="background:rgba(6,182,212,.2);color:var(--secondary)"><i
+                        class="fas fa-file-alt"></i></div>
+                <div class="admin-stat-number">{{ total_applications }}</div>
+                <div class="admin-stat-label">Total Applications</div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+            <div class="card">
+                <div class="card-header">Recent Jobs</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Job</th>
+                                <th>Company</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for job in recent_jobs %}
+                            <tr>
+                                <td>{{ job.title }}</td>
+                                <td>{{ job.company.company_name }}</td>
+                                <td>
+                                    {% if job.is_active %}
+                                    <span class="badge badge-active">Active</span>
+                                    {% else %}
+                                    <span class="badge badge-inactive">Inactive</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Recent Applications</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Job</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in recent_applications %}
+                            <tr>
+                                <td>{{ app.candidate.user.username }}</td>
+                                <td>{{ app.job.title|truncatechars:20 }}</td>
+                                <td><span style="color:var(--text-muted);font-size:.85rem">{{ app.applied_at|date:"d M"
+                                        }}</span></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

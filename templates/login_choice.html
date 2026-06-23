@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Login — Job Seeker Portal{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card" style="max-width:780px">
+        <div class="form-card-header" style="text-align:center;padding:2.5rem 2rem 1.5rem">
+            <div style="font-size:2.5rem;margin-bottom:.7rem">🔐</div>
+            <h2 style="margin:0 0 .5rem">Welcome Back!</h2>
+            <p style="color:var(--text-muted)">Choose your account type to sign in</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:1.5rem 2rem 2.5rem">
+
+            <!-- Candidate Login Card -->
+            <a href="{% url 'candidate_login' %}" style="text-decoration:none">
+                <div class="card login-choice-card" style="padding:2.5rem 2rem;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .3s">
+                    <div style="font-size:3.5rem;margin-bottom:1.2rem">👨‍💼</div>
+                    <h3 style="font-size:1.3rem;margin-bottom:.6rem;color:var(--heading)">Candidate Login</h3>
+                    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem;line-height:1.6">
+                        Log in to your job seeker account to browse and apply for jobs.
+                    </p>
+                    <span class="btn btn-primary" style="width:100%;display:block">
+                        <i class="fas fa-sign-in-alt"></i> Login as Candidate
+                    </span>
+                </div>
+            </a>
+
+            <!-- Company Login Card -->
+            <a href="{% url 'company_login' %}" style="text-decoration:none">
+                <div class="card login-choice-card" style="padding:2.5rem 2rem;text-align:center;cursor:pointer;border:2px solid transparent;transition:all .3s">
+                    <div style="font-size:3.5rem;margin-bottom:1.2rem">🏢</div>
+                    <h3 style="font-size:1.3rem;margin-bottom:.6rem;color:var(--heading)">Company Login</h3>
+                    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem;line-height:1.6">
+                        Log in to your employer account to post jobs and find candidates.
+                    </p>
+                    <span class="btn btn-secondary" style="width:100%;display:block">
+                        <i class="fas fa-building"></i> Login as Company
+                    </span>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="auth-footer">
+            <p>New here? <a href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Create your account</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+.login-choice-card:hover {
+    border-color: var(--primary) !important;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(99,102,241,0.2);
+}
+@media(max-width:600px){
+    .login-choice-card { padding:1.5rem }
+    div[style*="grid-template-columns"] { grid-template-columns:1fr !important; }
+}
+</style>
+{% endblock %}

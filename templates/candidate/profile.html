@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}My Profile — JobPortal{% endblock %}
+{% block content %}
+<div class="profile-header">
+    <div class="profile-cover"></div>
+    <div class="profile-hero">
+        <div class="profile-avatar">
+            {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" alt="Profile">
+            {% else %}
+            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+            {% endif %}
+        </div>
+        <div class="profile-info">
+            <h1>{{ user.get_full_name|default:user.username }}</h1>
+            <p><i class="fas fa-envelope"></i> {{ user.email }}
+                {% if profile.location %}
+                &nbsp;·&nbsp; <i class="fas fa-map-marker-alt"></i> {{ profile.location }}
+                {% endif %}
+            </p>
+            {% if profile.linkedin %}
+            <a href="{{ profile.linkedin }}" target="_blank" style="color:var(--primary-light);font-size:.9rem"><i
+                    class="fab fa-linkedin"></i> LinkedIn</a>
+            {% endif %}
+            {% if profile.github %}
+            &nbsp;&nbsp;<a href="{{ profile.github }}" target="_blank"
+                style="color:var(--text-muted);font-size:.9rem"><i class="fab fa-github"></i> GitHub</a>
+            {% endif %}
+        </div>
+        <div style="margin-left:auto;flex-shrink:0">
+            {% if profile.resume %}
+            <a href="{{ profile.resume.url }}" download class="btn btn-success btn-sm"><i class="fas fa-download"></i>
+                Download Resume</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="section" style="padding-top:2rem; padding-bottom:4rem;">
+    <div class="container profile-content" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(450px, 1fr));gap:2rem;">
+    <!-- LEFT: Edit Profile Form -->
+    <div>
+        <div class="card" style="margin-bottom:1.5rem">
+            <div class="card-header"><i class="fas fa-edit" style="color:var(--primary)"></i> Edit Profile</div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div style="color:var(--danger);font-size:.82rem">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-save"></i> Save
+                        Profile</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- RIGHT: Applications -->
+    <div>
+        <div class="card">
+            <div class="card-header"><i class="fas fa-file-alt" style="color:var(--secondary)"></i> My Applications ({{ applications.count }})</div>
+            {% if applications %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Job</th>
+                            <th>Company</th>
+                            <th>Status</th>
+                            <th>Applied</th>
+                            <th>Interview</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            <td><a href="{% url 'job_detail' app.job.id %}"
+                                    style="color:var(--primary-light);font-weight:600">{{ app.job.title }}</a></td>
+                            <td>{{ app.job.company.company_name }}</td>
+                            <td><span class="badge badge-{{ app.status }}">{{ app.get_status_display }}</span></td>
+                            <td style="color:var(--text-muted);font-size:.85rem">{{ app.applied_at|date:"d M Y" }}</td>
+                            <td>
+                                {% if app.interview %}
+                                <span style="color:var(--success);font-size:.85rem"><i
+                                        class="fas fa-calendar-check"></i> {{ app.interview.scheduled_date|date:"d M Y, H:i" }}</span>
+                                {% else %}
+                                <span style="color:var(--text-dim);font-size:.85rem">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="card-body">
+                <div class="empty-state"><i class="fas fa-file-alt"></i>
+                    <h3>No applications yet</h3>
+                    <p>Start applying for jobs!</p>
+                    <a href="{% url 'job_search' %}" class="btn btn-primary" style="margin-top:1rem"><i
+                            class="fas fa-search"></i> Browse Jobs</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}Company Dashboard — JobPortal{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <div>
+            <h1><i class="fas fa-building" style="color:var(--primary)"></i> {{ company.company_name }}</h1>
+            <p>{{ company.location }}
+                {% if company.is_verified %}
+                <span class="badge badge-verified" style="margin-left:.5rem"><i class="fas fa-check-circle"></i>
+                    Verified</span>
+                {% endif %}
+            </p>
+        </div>
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+            <a href="{% url 'post_job' %}" class="btn btn-primary"><i class="fas fa-plus"></i> Post New Job</a>
+            <a href="{% url 'company_profile' %}" class="btn btn-outline"><i class="fas fa-edit"></i> Edit Profile</a>
+            <a href="{% url 'search_candidates' %}" class="btn btn-secondary"><i class="fas fa-users"></i> Find
+                Candidates</a>
+        </div>
+    </div>
+</div>
+
+<div class="section" style="padding-top:2rem">
+    <div class="container">
+        <!-- Stats -->
+        <div class="admin-stats" style="margin-bottom:2rem">
+            <div class="admin-stat">
+                <div class="admin-stat-icon" style="background:rgba(99,102,241,.2);color:var(--primary)"><i
+                        class="fas fa-briefcase"></i></div>
+                <div class="admin-stat-number">{{ jobs.count }}</div>
+                <div class="admin-stat-label">Total Jobs Posted</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-icon" style="background:rgba(16,185,129,.2);color:var(--success)"><i
+                        class="fas fa-check-circle"></i></div>
+                <div class="admin-stat-number">{{ jobs|length }}</div>
+                <div class="admin-stat-label">Active Listings</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-icon" style="background:rgba(6,182,212,.2);color:var(--secondary)"><i
+                        class="fas fa-file-alt"></i></div>
+                <div class="admin-stat-number">{{ total_applications }}</div>
+                <div class="admin-stat-label">Total Applications</div>
+            </div>
+            <div class="admin-stat">
+                <div class="admin-stat-icon" style="background:rgba(245,158,11,.2);color:var(--accent)"><i
+                        class="fas fa-calendar-check"></i></div>
+                <div class="admin-stat-number">{{ interviews }}</div>
+                <div class="admin-stat-label">Interviews Scheduled</div>
+            </div>
+        </div>
+
+        <!-- Job Listings -->
+        <div class="card">
+            <div class="card-header" style="display:flex;justify-content:space-between;align-items:center">
+                <span><i class="fas fa-list" style="color:var(--primary)"></i> My Job Listings</span>
+                <a href="{% url 'post_job' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Add Job</a>
+            </div>
+            {% if jobs %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Location</th>
+                            <th>Type</th>
+                            <th>Applications</th>
+                            <th>Status</th>
+                            <th>Posted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td><strong>{{ job.title }}</strong></td>
+                            <td style="color:var(--text-muted)">{{ job.location }}</td>
+                            <td><span class="badge badge-pending">{{ job.get_job_type_display }}</span></td>
+                            <td>
+                                <a href="{% url 'view_applications' job.id %}"
+                                    style="color:var(--primary-light);font-weight:600">
+                                    {{ job.applications.count }} apps
+                                </a>
+                            </td>
+                            <td>
+                                {% if job.is_active %}
+                                <span class="badge badge-active">Active</span>
+                                {% else %}
+                                <span class="badge badge-inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td style="color:var(--text-muted);font-size:.85rem">{{ job.created_at|date:"d M Y" }}</td>
+                            <td class="actions-cell">
+                                <a href="{% url 'view_applications' job.id %}" class="btn btn-sm btn-secondary"><i
+                                        class="fas fa-eye"></i></a>
+                                <a href="{% url 'edit_job' job.id %}" class="btn btn-sm btn-warning"><i
+                                        class="fas fa-edit"></i></a>
+                                <a href="{% url 'delete_job' job.id %}" class="btn btn-sm btn-danger"><i
+                                        class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="card-body">
+                <div class="empty-state"><i class="fas fa-briefcase"></i>
+                    <h3>No jobs posted yet</h3>
+                    <a href="{% url 'post_job' %}" class="btn btn-primary" style="margin-top:1rem"><i
+                            class="fas fa-plus"></i> Post Your First Job</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

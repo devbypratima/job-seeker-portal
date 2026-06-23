@@ -1,0 +1,76 @@
+{% extends 'admin_portal/dashboard.html' %}
+{% block title %}Manage Companies — Admin{% endblock %}
+{% block content %}
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <a href="{% url 'admin_dashboard' %}" class="sidebar-link"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a href="{% url 'admin_candidates' %}" class="sidebar-link"><i class="fas fa-users"></i> Candidates</a>
+        <a href="{% url 'admin_companies' %}" class="sidebar-link active"><i class="fas fa-building"></i> Companies</a>
+        <a href="{% url 'admin_jobs' %}" class="sidebar-link"><i class="fas fa-briefcase"></i> Jobs</a>
+        <a href="{% url 'admin_applications' %}" class="sidebar-link"><i class="fas fa-file-alt"></i> Applications</a>
+        <a href="{% url 'admin_interviews' %}" class="sidebar-link"><i class="fas fa-video"></i> Interviews</a>
+        <a href="{% url 'admin_messages' %}" class="sidebar-link"><i class="fas fa-envelope"></i> Messages</a>
+        <div class="sidebar-brand" style="margin-top:2rem">System</div>
+        <a href="{% url 'logout' %}" class="sidebar-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </aside>
+    <main class="admin-main">
+        <h1 style="font-size:1.8rem;margin-bottom:1.5rem">Manage Companies</h1>
+        <div class="card">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Email</th>
+                            <th>Location</th>
+                            <th>Jobs Posted</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for company in companies %}
+                        <tr>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:.8rem">
+                                    <div class="company-logo-sm"
+                                        style="width:36px;height:36px;font-size:1rem;border-radius:var(--radius-sm)">
+                                        {{ company.company_name|first|upper }}
+                                    </div>
+                                    <strong>{{ company.company_name }}</strong>
+                                </div>
+                            </td>
+                            <td>{{ company.user.email }}</td>
+                            <td>{{ company.location|default:"N/A" }}</td>
+                            <td><span class="badge badge-pending">{{ company.jobs.count }}</span></td>
+                            <td>
+                                {% if company.is_verified %}
+                                <span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>
+                                {% else %}
+                                <span class="badge badge-unverified">Unverified</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="post" action="{% url 'admin_verify_company' company.id %}">
+                                    {% csrf_token %}
+                                    {% if company.is_verified %}
+                                    <button type="submit" class="btn btn-sm btn-outline"
+                                        style="color:var(--warning);border-color:var(--warning)">Revoke</button>
+                                    {% else %}
+                                    <button type="submit" class="btn btn-sm btn-success">Verify</button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align:center;color:var(--text-muted)">No companies found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

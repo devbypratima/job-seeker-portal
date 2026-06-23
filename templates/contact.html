@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Contact Us — JobPortal{% endblock %}
+{% block content %}
+<div class="page-header" style="background:var(--gradient-hero)">
+    <div class="container" style="text-align:center">
+        <h1 style="color:#fff;font-size:3rem;margin-bottom:1rem">Get in <span class="gradient-text">Touch</span></h1>
+        <p style="color:var(--text-muted);font-size:1.1rem;max-width:600px;margin:0 auto">Have questions or need
+            support? We're here to help you navigate your career journey.</p>
+    </div>
+</div>
+
+<div class="section" style="padding-top:4rem">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h2 style="font-size:1.8rem;margin-bottom:1.5rem">Contact Information</h2>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div>
+                        <h4 style="font-size:1.1rem;margin-bottom:.3rem">Our Office</h4>
+                        <p style="color:var(--text-muted);font-size:.95rem">123 Tech Park, Phase 2<br>Hinjewadi, Pune,
+                            Maharashtra 411057</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <div>
+                        <h4 style="font-size:1.1rem;margin-bottom:.3rem">Email Support</h4>
+                        <p style="color:var(--text-muted);font-size:.95rem">support@jobseeker.com<br>info@jobseeker.com
+                        </p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                    <div>
+                        <h4 style="font-size:1.1rem;margin-bottom:.3rem">Call Us</h4>
+                        <p style="color:var(--text-muted);font-size:.95rem">+91 98765 43210<br>Mon-Fri, 9am - 6pm IST
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><i class="fas fa-paper-plane" style="color:var(--primary)"></i> Send us a
+                    Message</div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Your Name</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                <div style="color:var(--danger);font-size:.82rem">{{ form.name.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Your Email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                <div style="color:var(--danger);font-size:.82rem">{{ form.email.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Subject</label>
+                            {{ form.subject }}
+                            {% if form.subject.errors %}
+                            <div style="color:var(--danger);font-size:.82rem">{{ form.subject.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            {{ form.message }}
+                            {% if form.message.errors %}
+                            <div style="color:var(--danger);font-size:.82rem">{{ form.message.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="margin-top:1rem;width:100%">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

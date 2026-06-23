@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}About Us — JobPortal{% endblock %}
+{% block content %}
+<div class="page-header" style="background:var(--gradient-hero);padding:6rem 1.5rem">
+    <div class="container" style="text-align:center; display:flex; flex-direction:column; align-items:center;">
+        <h1 style="color:#fff;font-size:3.5rem;margin-bottom:1rem">About <span class="gradient-text">JobPortal</span>
+        </h1>
+        <p style="color:var(--text-muted);font-size:1.2rem;max-width:700px;margin:0 auto">Bridging the gap between
+            talented individuals and the companies that need them.</p>
+    </div>
+</div>
+
+<div class="section">
+    <div class="container" style="max-width:900px">
+        <h2 style="font-size:2rem;margin-bottom:1.5rem">Our Mission</h2>
+        <p style="color:var(--text-muted);font-size:1.1rem;line-height:1.8;margin-bottom:3rem">JobPortal was created as
+            a comprehensive solution for modern recruitment. Our platform empowers job seekers to build professional
+            profiles, discover tailored opportunities, and apply with ease. Simultaneously, we provide companies with
+            robust tools to post jobs, manage applications, and schedule interviews efficiently.</p>
+
+        <h2 style="font-size:2rem;margin-bottom:2rem">Platform Features</h2>
+        <div class="grid-2" style="margin-bottom:4rem">
+            <div class="about-feature">
+                <div class="feature-icon"><i class="fas fa-user-tie"></i></div>
+                <div>
+                    <h3 style="font-size:1.15rem;margin-bottom:.5rem">For Candidates</h3>
+                    <p style="color:var(--text-muted);font-size:.95rem">Create rich profiles, upload resumes, track
+                        application statuses, and land your ideal job.</p>
+                </div>
+            </div>
+            <div class="about-feature">
+                <div class="feature-icon"><i class="fas fa-building"></i></div>
+                <div>
+                    <h3 style="font-size:1.15rem;margin-bottom:.5rem">For Employers</h3>
+                    <p style="color:var(--text-muted);font-size:.95rem">Post unlimited jobs, review candidate profiles,
+                        update application stages, and schedule interviews online.</p>
+                </div>
+            </div>
+            <div class="about-feature">
+                <div class="feature-icon"><i class="fas fa-search"></i></div>
+                <div>
+                    <h3 style="font-size:1.15rem;margin-bottom:.5rem">Smart Search</h3>
+                    <p style="color:var(--text-muted);font-size:.95rem">Filter jobs or candidates by skills, location,
+                        and experience to find the perfect match quickly.</p>
+                </div>
+            </div>
+            <div class="about-feature">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <div>
+                    <h3 style="font-size:1.15rem;margin-bottom:.5rem">Admin Management</h3>
+                    <p style="color:var(--text-muted);font-size:.95rem">Complete oversight over the platform, verifying
+                        companies and ensuring job quality.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="text-align:center;padding:3rem">
+            <h2 style="font-size:2rem;margin-bottom:1rem">Built with Modern Tech</h2>
+            <p style="color:var(--text-muted);font-size:1.1rem;margin-bottom:2rem">This platform is powered by a robust
+                stack to ensure speed, security, and scalability.</p>
+            <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap">
+                <div style="text-align:center"><i class="fab fa-python"
+                        style="font-size:3rem;color:#3776ab;margin-bottom:.5rem"></i>
+                    <div style="font-weight:600">Python/Django</div>
+                </div>
+                <div style="text-align:center"><i class="fab fa-html5"
+                        style="font-size:3rem;color:#e34f26;margin-bottom:.5rem"></i>
+                    <div style="font-weight:600">HTML5</div>
+                </div>
+                <div style="text-align:center"><i class="fab fa-css3-alt"
+                        style="font-size:3rem;color:#1572b6;margin-bottom:.5rem"></i>
+                    <div style="font-weight:600">Premium CSS</div>
+                </div>
+                <div style="text-align:center"><i class="fas fa-database"
+                        style="font-size:3rem;color:var(--text-muted);margin-bottom:.5rem"></i>
+                    <div style="font-weight:600">SQLite</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

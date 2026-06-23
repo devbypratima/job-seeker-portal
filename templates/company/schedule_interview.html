@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Schedule Interview — JobPortal{% endblock %}
+{% block content %}
+<div class="auth-page" style="padding-top:3rem;align-items:flex-start">
+    <div class="auth-card" style="max-width:560px">
+        <div class="form-card">
+            <div class="form-card-header">
+                <h2><i class="fas fa-calendar-alt"></i> Schedule Interview</h2>
+                <p>For {{ application.candidate.user.get_full_name|default:application.candidate.user.username }}
+                    ({{ application.job.title }})</p>
+            </div>
+            <div class="form-card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div style="color:var(--danger);font-size:.82rem">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <div style="display:flex;gap:1rem;margin-top:1.5rem">
+                        <button type="submit" class="btn btn-primary" style="flex:1">
+                            <i class="fas fa-calendar-check"></i> Save Interview Details
+                        </button>
+                        <a href="{% url 'view_applications' application.job.id %}" class="btn btn-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
