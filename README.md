@@ -28,30 +28,45 @@ A web-based **Job Seeker Portal** developed as a **BCA Major Project**. The plat
 ## ⚙️ Installation & Setup
 
 1. Clone the repository
+
 ```bash
-   git clone https://github.com/devbypratima/job-seeker-portal.git
-   cd job-seeker-portal
+git clone https://github.com/devbypratima/job-seeker-portal.git
+cd job-seeker-portal
 ```
 
 2. Create and activate a virtual environment
+
 ```bash
-   python -m venv venv
-   venv\Scripts\activate      # Windows
-   source venv/bin/activate   # macOS/Linux
+python -m venv venv
+venv\Scripts\activate
+source venv/bin/activate
 ```
 
 3. Install dependencies
+
 ```bash
-   pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 4. Configure the MySQL database in `settings.py` with your credentials
 
 5. Run migrations
+
 ```bash
-   python manage.py makemigrations
-   python manage.py migrate
-```http://127.0.0.1:8000/ ## 🎯 Objective
+python manage.py makemigrations
+python manage.py migrate
+```
+
+6. Start the development server
+
+```bash
+python manage.py runserver
+```
+
+7. Open the project in your browser:
+http://127.0.0.1:8000/
+
+## 🎯 Objective
 
 The goal of this project is to bridge the gap between job seekers and employers by providing a simple, centralized platform where job seekers can find relevant opportunities and employers can find suitable candidates efficiently.
 
@@ -63,12 +78,3 @@ BCA Major Project
 ## 📄 License
 
 This project is created for academic purposes as part of the BCA curriculum.
-
-
-6. Start the development server
-```bash
-   python manage.py runserver
-```
-
-7. Open the project in your browser
-   
